@@ -17,6 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use WebVision\WvFileCleanup\FileFacade;
 use WebVision\WvFileCleanup\Service\FileCollectionService;
+use WebVision\WvFileCleanup\Service\ProtectedFileService;
 
 /**
  * Class FileRepository
@@ -44,6 +45,11 @@ class FileRepository implements SingletonInterface
     protected $fileCollectionService;
 
     /**
+     * @var ProtectedFileService
+     */
+    protected $protectedFileService;
+
+    /**
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
@@ -51,6 +57,7 @@ class FileRepository implements SingletonInterface
     {
         $this->connection = GeneralUtility::makeInstance(ConnectionPool::class);
         $this->fileCollectionService = GeneralUtility::makeInstance(FileCollectionService::class);
+        $this->protectedFileService = GeneralUtility::makeInstance(ProtectedFileService::class);
         $this->fileNameDenyPattern = GeneralUtility::makeInstance(ExtensionConfiguration::class)
             ->get('wv_file_cleanup', 'fileNameDenyPattern');
         $this->pathDenyPattern = GeneralUtility::makeInstance(ExtensionConfiguration::class)
@@ -110,6 +117,11 @@ class FileRepository implements SingletonInterface
             return !$this->fileCollectionService->isFileCollectionFile($file);
         });
 
+        // Filter out all files that editors protected from cleanup in the file metadata
+        $files = array_filter($files, function (File $file) {
+            return !$this->protectedFileService->isProtected($file);
+        });
+
         foreach ($files as $file) {
             $return[] = new FileFacade($file);
         }
@@ -162,6 +174,11 @@ class FileRepository implements SingletonInterface
                 return true;
             });
         }
+
+        // Files protected from cleanup must not be deleted from the recycler either
+        $files = array_filter($files, function (FileInterface $file) {
+            return !($file instanceof File) || !$this->protectedFileService->isProtected($file);
+        });
 
         return $files;
     }

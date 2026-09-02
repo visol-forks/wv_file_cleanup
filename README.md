@@ -41,6 +41,18 @@ in the extension configuration (see extension manager).
 The value can also be overwritten in the command controller (and scheduler task).
 
 
+## Protecting single files from cleanup
+
+Some files have to stay in the file storage although nothing references them,
+for example documents that are only linked from outside TYPO3.
+
+Open such a file in the *Filelist* module, edit its metadata and enable
+**Protect from cleanup**. Protected files are excluded from
+
+* the *File cleanup* backend module,
+* the ``wv_file_cleanup:cleanup`` command,
+* the ``wv_file_cleanup:emptyrecycler`` command.
+
 ## Examples
 
 To only match `*.pdf` files you can set the fileNameDenyPattern to ``/^(?!.*\b.pdf\b)/``
