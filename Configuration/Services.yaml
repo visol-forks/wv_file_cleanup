@@ -6,6 +6,8 @@ services:
 
   WebVision\WvFileCleanup\:
     resource: '../Classes/*'
+    # Registered in Services.php, but only when EXT:dashboard is installed
+    exclude: '../Classes/Widgets/*'
 
   WebVision\WvFileCleanup\Command\EmptyRecyclerCommand:
     tags:
@@ -27,4 +29,7 @@ services:
 
   WebVision\WvFileCleanup\Controller\CleanupController:
     tags: [ 'backend.controller' ]
+
+  WebVision\WvFileCleanup\Controller\Backend\ProtectedFilesCsvExportController:
+    public: true
 

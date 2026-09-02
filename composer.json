@@ -14,6 +14,9 @@
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^v3.0"
     },
+    "suggest": {
+        "typo3/cms-dashboard": "Adds a dashboard widget listing all files that are protected from cleanup"
+    },
     "autoload": {
         "psr-4": {
             "WebVision\\WvFileCleanup\\": "Classes"

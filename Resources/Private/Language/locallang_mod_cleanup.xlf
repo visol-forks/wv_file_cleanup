@@ -46,6 +46,24 @@
 			<trans-unit id="folder">
 				<source>Folder</source>
 			</trans-unit>
+			<trans-unit id="widget.protectedFiles.title">
+				<source>Files protected from cleanup</source>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.description">
+				<source>All files that are marked as "Protect from cleanup" in their metadata.</source>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.column.actions">
+				<source>Actions</source>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.action.edit">
+				<source>Edit metadata</source>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.action.export">
+				<source>Export as CSV</source>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.empty">
+				<source>No file is protected from cleanup.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

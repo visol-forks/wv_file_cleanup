@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+	<file t3:id="1453968515" source-language="en" target-language="de" datatype="plaintext"
+		  original="messages" date="2026-09-02T00:00:00Z" product-name="lang">
+		<header/>
+		<body>
+			<trans-unit id="widget.protectedFiles.title">
+				<source>Files protected from cleanup</source>
+				<target>Vor Bereinigung geschützte Dateien</target>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.description">
+				<source>All files that are marked as "Protect from cleanup" in their metadata.</source>
+				<target>Alle Dateien, die in ihren Metadaten als «Vor Bereinigung schützen» markiert sind.</target>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.column.actions">
+				<source>Actions</source>
+				<target>Aktionen</target>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.action.edit">
+				<source>Edit metadata</source>
+				<target>Metadaten bearbeiten</target>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.action.export">
+				<source>Export as CSV</source>
+				<target>Als CSV exportieren</target>
+			</trans-unit>
+			<trans-unit id="widget.protectedFiles.empty">
+				<source>No file is protected from cleanup.</source>
+				<target>Keine Datei ist vor der Bereinigung geschützt.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

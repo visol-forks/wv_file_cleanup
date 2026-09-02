@@ -1,0 +1,94 @@
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    data-namespace-typo3-fluid="true"
+>
+<f:layout name="Widget/Widget"/>
+
+<f:section name="main">
+    <f:if condition="{files}">
+        <f:then>
+            <div class="widget-table-wrapper">
+                <table class="widget-table table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th class="col-icon"></th>
+                            <th class="col-control nowrap">
+                                <span class="visually-hidden">{f:translate(key: 'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:widget.protectedFiles.column.actions')}</span>
+                            </th>
+                            <th>{f:translate(key: 'LLL:EXT:filelist/Resources/Private/Language/locallang_mod_file_list.xlf:c_name')}</th>
+                            <th>{f:translate(key: 'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:filepath')}</th>
+                            <th class="nowrap">{f:translate(key: 'LLL:EXT:filelist/Resources/Private/Language/locallang_mod_file_list.xlf:c_size')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <f:for each="{files}" as="file">
+                            <tr>
+                                <td class="col-icon">
+                                    <core:iconForResource resource="{file.resource}" size="small"/>
+                                </td>
+                                <td class="col-control nowrap">
+                                    <f:if condition="{file.metadataUid}">
+                                        <be:link.editRecord
+                                            uid="{file.metadataUid}"
+                                            table="sys_file_metadata"
+                                            returnUrl="{f:be.uri(route: 'dashboard')}"
+                                            class="btn btn-default btn-sm"
+                                            title="{f:translate(key: 'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:widget.protectedFiles.action.edit')}">
+                                            <core:icon identifier="actions-open" size="small"/>
+                                        </be:link.editRecord>
+                                    </f:if>
+                                </td>
+                                <td class="col-title">
+                                    <f:if condition="{file.publicUrl}">
+                                        <f:then>
+                                            <a href="{file.publicUrl}" target="_blank" rel="noopener noreferrer">{file.name}</a>
+                                        </f:then>
+                                        <f:else>
+                                            {file.name}
+                                        </f:else>
+                                    </f:if>
+                                    <div>
+                                        <small class="text-muted">{file.extension}</small>
+                                    </div>
+                                </td>
+                                <td class="col-path">
+                                    <small class="text-muted">{file.path}</small>
+                                </td>
+                                <td class="nowrap">
+                                    <f:format.bytes decimals="1">{file.size}</f:format.bytes>
+                                </td>
+                            </tr>
+                        </f:for>
+                    </tbody>
+                </table>
+            </div>
+        </f:then>
+        <f:else>
+            <div class="callout callout-info">
+                <div class="callout-icon">
+                    <span class="icon-emphasized">
+                        <core:icon identifier="actions-lock"/>
+                    </span>
+                </div>
+                <div class="callout-content">
+                    <div class="callout-title">
+                        {f:translate(key: 'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:widget.protectedFiles.empty')}
+                    </div>
+                </div>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="footer">
+    <f:if condition="{files}">
+        <a href="{exportUrl}" class="m-3 btn btn-default btn-sm">
+            <core:icon identifier="actions-document-export-csv" size="small"/>
+            {f:translate(key: 'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:widget.protectedFiles.action.export')}
+        </a>
+    </f:if>
+</f:section>
+
+</html>

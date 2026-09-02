@@ -53,6 +53,12 @@ Open such a file in the *Filelist* module, edit its metadata and enable
 * the ``wv_file_cleanup:cleanup`` command,
 * the ``wv_file_cleanup:emptyrecycler`` command.
 
+## Dashboard widget
+
+If EXT:dashboard is installed, the widget **Files protected from cleanup**
+(group *System information*) lists every protected file with its path and size,
+links to its metadata record and offers the list as a CSV download.
+
 ## Examples
 
 To only match `*.pdf` files you can set the fileNameDenyPattern to ``/^(?!.*\b.pdf\b)/``
