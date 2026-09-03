@@ -10,3 +10,6 @@ composer.json.testing
 /public/
 /vendor/
 /.php-cs-fixer.cache
+
+# Do not track IDE configuration
+/.idea/
