@@ -71,6 +71,8 @@ class FileRepository implements SingletonInterface
      * @param bool        $recursive
      * @param string|null $fileDenyPattern
      * @param string|null $pathDenyPattern
+     * @param bool        $includeProtected Keep files protected from cleanup in the result,
+     *                                      flagged as such, instead of dropping them
      *
      * @return FileFacade[]
      * @throws ResourceDoesNotExistException
@@ -79,7 +81,8 @@ class FileRepository implements SingletonInterface
         Folder $folder,
         bool $recursive = true,
         string $fileDenyPattern = null,
-        string $pathDenyPattern = null
+        string $pathDenyPattern = null,
+        bool $includeProtected = false
     ): array {
         $this->fileCollectionService->initialize($folder->getStorage()->getUid(), $folder->getIdentifier());
 
@@ -118,12 +121,14 @@ class FileRepository implements SingletonInterface
         });
 
         // Filter out all files that editors protected from cleanup in the file metadata
-        $files = array_filter($files, function (File $file) {
-            return !$this->protectedFileService->isProtected($file);
-        });
+        if (!$includeProtected) {
+            $files = array_filter($files, function (File $file) {
+                return !$this->protectedFileService->isProtected($file);
+            });
+        }
 
         foreach ($files as $file) {
-            $return[] = new FileFacade($file);
+            $return[] = new FileFacade($file, $this->protectedFileService->isProtected($file));
         }
 
         return $return;

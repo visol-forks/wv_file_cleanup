@@ -47,11 +47,14 @@ Some files have to stay in the file storage although nothing references them,
 for example documents that are only linked from outside TYPO3.
 
 Open such a file in the *Filelist* module, edit its metadata and enable
-**Protect from cleanup**. Protected files are excluded from
+**Protect from cleanup**, or use the lock button next to the file in the
+*File cleanup* module.
 
-* the *File cleanup* backend module,
-* the ``wv_file_cleanup:cleanup`` command,
-* the ``wv_file_cleanup:emptyrecycler`` command.
+Protected files stay listed in the backend module, greyed out and with their
+checkbox disabled, so it stays visible why they are never cleaned up. They are
+never moved to a ``_recycler_`` folder by the module or by
+``wv_file_cleanup:cleanup``, and never removed by
+``wv_file_cleanup:emptyrecycler``.
 
 ## Dashboard widget
 

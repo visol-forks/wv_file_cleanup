@@ -64,6 +64,18 @@
 			<trans-unit id="widget.protectedFiles.empty">
 				<source>No file is protected from cleanup.</source>
 			</trans-unit>
+			<trans-unit id="column.actions">
+				<source>Actions</source>
+			</trans-unit>
+			<trans-unit id="action.protect">
+				<source>Protect from cleanup</source>
+			</trans-unit>
+			<trans-unit id="action.unprotect">
+				<source>Allow cleanup again</source>
+			</trans-unit>
+			<trans-unit id="protected.hint">
+				<source>This file is protected from cleanup and cannot be selected.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

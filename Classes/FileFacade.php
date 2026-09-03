@@ -58,12 +58,49 @@ class FileFacade
     protected $databaseConnection;
 
     /**
-     * @param FileInterface $resource
+     * @var bool
      */
-    public function __construct(FileInterface $resource)
+    protected $cleanupProtected = false;
+
+    /**
+     * @var string
+     */
+    protected $protectionToggleUrl = '';
+
+    /**
+     * @param FileInterface $resource
+     * @param bool          $cleanupProtected
+     */
+    public function __construct(FileInterface $resource, bool $cleanupProtected = false)
     {
         $this->resource = $resource;
+        $this->cleanupProtected = $cleanupProtected;
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+    }
+
+    /**
+     * Whether an editor marked this file as "protect from cleanup"
+     *
+     * @return bool
+     */
+    public function getIsCleanupProtected()
+    {
+        return $this->cleanupProtected;
+    }
+
+    /**
+     * URL that flips the protection flag, empty when it cannot be toggled
+     *
+     * @return string
+     */
+    public function getProtectionToggleUrl()
+    {
+        return $this->protectionToggleUrl;
+    }
+
+    public function setProtectionToggleUrl(string $protectionToggleUrl): void
+    {
+        $this->protectionToggleUrl = $protectionToggleUrl;
     }
 
     /**
@@ -106,7 +143,7 @@ class FileFacade
     public function getMetadataUid()
     {
         $uid = 0;
-        $method = '_getMetadata';
+        $method = 'getMetaData';
         if (is_callable([$this->resource, $method])) {
             $metadata = call_user_func([$this->resource, $method]);
 

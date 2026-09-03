@@ -38,6 +38,7 @@ use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use \TYPO3Fluid\Fluid\View\ViewInterface;
 use WebVision\WvFileCleanup\Domain\Repository\FileRepository;
+use WebVision\WvFileCleanup\Service\ProtectedFileService;
 
 /**
  * Class CleanupController
@@ -56,6 +57,8 @@ class CleanupController extends ActionController
 
     protected FileRepository $fileRepository;
 
+    protected ProtectedFileService $protectedFileService;
+
     protected BackendUriBuilder $backendUriBuilder;
 
     /**
@@ -71,6 +74,7 @@ class CleanupController extends ActionController
 
     public function __construct(
         FileRepository $fileRepository,
+        ProtectedFileService $protectedFileService,
         PageRenderer $pageRenderer,
         ModuleTemplateFactory $moduleTemplateFactory,
         IconFactory $iconFactory,
@@ -78,6 +82,7 @@ class CleanupController extends ActionController
         BackendUriBuilder $backendUriBuilder
     ) {
         $this->fileRepository = $fileRepository;
+        $this->protectedFileService = $protectedFileService;
         $this->pageRenderer = $pageRenderer;
         $this->moduleTemplateFactory = $moduleTemplateFactory;
         $this->iconFactory = $iconFactory;
@@ -346,7 +351,17 @@ class CleanupController extends ActionController
      */
     public function indexAction(): ResponseInterface
     {
-        $this->moduleTemplate->assign('files', $this->fileRepository->findUnusedFile($this->folder, $this->moduleSettings['recursive'] ?? false));
+        // Protected files stay in the list, but shown as locked instead of selectable
+        $files = $this->fileRepository->findUnusedFile(
+            $this->folder,
+            $this->moduleSettings['recursive'] ?? false,
+            null,
+            null,
+            true
+        );
+        $this->addProtectionToggleUrls($files);
+
+        $this->moduleTemplate->assign('files', $files);
         $this->moduleTemplate->assign('folder', $this->folder);
         $backendUserTsconfig = $this->getBackendUserTsconfig();
 
@@ -419,8 +434,13 @@ class CleanupController extends ActionController
     {
         /** @var $resourceFactory ResourceFactory **/
         $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
+        $protectedFileUids = $this->protectedFileService->getProtectedFileUids();
         $movedFilesCount = 0;
         foreach ($files as $fileUid) {
+            // Protected files are never selectable, guard against a forged request anyway
+            if (in_array((int)$fileUid, $protectedFileUids, true)) {
+                continue;
+            }
             try {
                 $file = $resourceFactory->getFileObject($fileUid);
                 $folder = $file->getParentFolder();
@@ -459,6 +479,41 @@ class CleanupController extends ActionController
         }
 
         return $this->redirect('index');
+    }
+
+    /**
+     * Give every file a link that flips its cleanup protection, as far as the
+     * current user may edit file metadata at all
+     *
+     * @param \WebVision\WvFileCleanup\FileFacade[] $files
+     */
+    protected function addProtectionToggleUrls(array $files): void
+    {
+        $returnUrl = (string)$this->backendUriBuilder->buildUriFromRoute(
+            $this->moduleIdentifier,
+            ['id' => $this->folder->getCombinedIdentifier()]
+        );
+
+        foreach ($files as $file) {
+            $metadataUid = $file->getMetadataUid();
+            if ($metadataUid <= 0 || !$file->getIsMetadataEditable()) {
+                continue;
+            }
+
+            $file->setProtectionToggleUrl((string)$this->backendUriBuilder->buildUriFromRoute(
+                'tce_db',
+                [
+                    'data' => [
+                        'sys_file_metadata' => [
+                            $metadataUid => [
+                                'cleanup_protected' => $file->getIsCleanupProtected() ? 0 : 1,
+                            ],
+                        ],
+                    ],
+                    'redirect' => $returnUrl,
+                ]
+            ));
+        }
     }
 
     /**

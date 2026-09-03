@@ -26,6 +26,9 @@
                         <th nowrap="nowrap" class="col-checkbox">
                             <input type="checkbox" class="checkbox js-cleanup-all" id="check-all" title="Select All" name="check-all"/>
                         </th>
+                        <th nowrap="nowrap" class="col-control">
+                            <span class="visually-hidden">{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:column.actions' )}</span>
+                        </th>
                         <th nowrap="nowrap" class="col-icon"></th>
                         <th nowrap="nowrap" class="col-title">{f:translate( key:'LLL:EXT:filelist/Resources/Private/Language/locallang_mod_file_list.xlf:c_name' )}</th>
                         <th nowrap="nowrap" class="col-path">{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:filepath' )}</th>
@@ -38,9 +41,42 @@
                     </thead>
                     <tbody>
                     <f:for each="{files}" as="file">
-                        <tr data-uid="0" data-l10nparent="0">
+                        <tr data-uid="0" data-l10nparent="0"<f:if condition="{file.isCleanupProtected}"> class="text-body-secondary opacity-75"</f:if>>
                             <td nowrap="nowrap" class="col-checkbox">
-                                <f:form.checkbox value="{file.resource.properties.uid}" name="files[]" class="checkbox js-cleanup-checkbox" />
+                                <f:if condition="{file.isCleanupProtected}">
+                                    <f:then>
+                                        <input type="checkbox" class="checkbox" disabled="disabled"
+                                               title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:protected.hint' )}" />
+                                    </f:then>
+                                    <f:else>
+                                        <f:form.checkbox value="{file.resource.properties.uid}" name="files[]" class="checkbox js-cleanup-checkbox" />
+                                    </f:else>
+                                </f:if>
+                            </td>
+                            <td nowrap="nowrap" class="col-control">
+                                <f:if condition="{file.protectionToggleUrl}">
+                                    <f:then>
+                                        <f:if condition="{file.isCleanupProtected}">
+                                            <f:then>
+                                                <a href="{file.protectionToggleUrl}" class="btn btn-default btn-sm"
+                                                   title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:action.unprotect' )}">
+                                                    <core:icon identifier="actions-unlock" size="small"/>
+                                                </a>
+                                            </f:then>
+                                            <f:else>
+                                                <a href="{file.protectionToggleUrl}" class="btn btn-default btn-sm"
+                                                   title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:action.protect' )}">
+                                                    <core:icon identifier="actions-lock" size="small"/>
+                                                </a>
+                                            </f:else>
+                                        </f:if>
+                                    </f:then>
+                                    <f:else>
+                                        <f:if condition="{file.isCleanupProtected}">
+                                            <core:icon identifier="actions-lock" size="small"/>
+                                        </f:if>
+                                    </f:else>
+                                </f:if>
                             </td>
                             <td nowrap="nowrap" class="col-icon">
                                 <f:if condition="{file.combinedIdentifier}">
