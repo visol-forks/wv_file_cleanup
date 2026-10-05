@@ -405,13 +405,13 @@ class CleanupController extends ActionController
                 'enabled' => $GLOBALS['TYPO3_CONF_VARS']['GFX']['thumbnails']
                     && $backendUserTsconfig['options.']['file_list.']['enableDisplayThumbnails'] === 'selectable',
                 'label' => $this->getLanguageService()->sL('LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:displayThumbs'),
-                'html' => '<input ' . $attributesDisplayThumbs . (isset($this->moduleSettings['displayThumbs']) ? ' checked="checked"' : '') . 'id="checkDisplayThumbs" />',
+                'html' => '<input ' . $attributesDisplayThumbs . (!empty($this->moduleSettings['displayThumbs']) ? ' checked="checked"' : '') . 'id="checkDisplayThumbs" />',
                 'checked' => $this->moduleSettings['displayThumbs'],
             ],
             'recursive' => [
                 'enabled' => true,
                 'label' => $this->getLanguageService()->sL('LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:search_folders_recursive'),
-                'html' => '<input ' . $attributesRecursive . (isset($this->moduleSettings['recursive']) ? ' checked="checked"' : '') . 'id="checkRecursive" />',
+                'html' => '<input ' . $attributesRecursive . (!empty($this->moduleSettings['recursive']) ? ' checked="checked"' : '') . 'id="checkRecursive" />',
                 'checked' => $this->moduleSettings['recursive'] ?? false,
             ],
         ]);
