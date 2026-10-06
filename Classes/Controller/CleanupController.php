@@ -483,12 +483,17 @@ class CleanupController extends ActionController
 
     /**
      * Give every file a link that flips its cleanup protection, as far as the
-     * current user may edit file metadata at all
+     * current user may edit the file metadata and its protection field
      *
      * @param \WebVision\WvFileCleanup\FileFacade[] $files
      */
     protected function addProtectionToggleUrls(array $files): void
     {
+        // DataHandler silently drops excluded fields the user may not edit
+        if (!$this->getBackendUser()->check('non_exclude_fields', 'sys_file_metadata:cleanup_protected')) {
+            return;
+        }
+
         $returnUrl = (string)$this->backendUriBuilder->buildUriFromRoute(
             $this->moduleIdentifier,
             ['id' => $this->folder->getCombinedIdentifier()]
