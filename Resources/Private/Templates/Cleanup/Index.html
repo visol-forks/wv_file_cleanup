@@ -43,14 +43,8 @@
                     <f:for each="{files}" as="file">
                         <tr data-uid="0" data-l10nparent="0"<f:if condition="{file.isCleanupProtected}"> class="text-body-secondary opacity-75"</f:if>>
                             <td nowrap="nowrap" class="col-checkbox">
-                                <f:if condition="{file.isCleanupProtected}">
-                                    <f:then>
-                                        <input type="checkbox" class="checkbox" disabled="disabled"
-                                               title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:protected.hint' )}" />
-                                    </f:then>
-                                    <f:else>
-                                        <f:form.checkbox value="{file.resource.properties.uid}" name="files[]" class="checkbox js-cleanup-checkbox" />
-                                    </f:else>
+                                <f:if condition="!{file.isCleanupProtected}">
+                                    <f:form.checkbox value="{file.resource.properties.uid}" name="files[]" class="checkbox js-cleanup-checkbox" />
                                 </f:if>
                             </td>
                             <td nowrap="nowrap" class="col-control">
@@ -58,22 +52,26 @@
                                     <f:then>
                                         <f:if condition="{file.isCleanupProtected}">
                                             <f:then>
-                                                <a href="{file.protectionToggleUrl}" class="btn btn-default btn-sm"
+                                                <a href="{file.protectionToggleUrl}" class="btn btn-warning btn-sm"
                                                    title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:action.unprotect' )}">
-                                                    <core:icon identifier="actions-unlock" size="small"/>
+                                                    <core:icon identifier="actions-lock" size="small"/>
+                                                    {f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:state.protected' )}
                                                 </a>
                                             </f:then>
                                             <f:else>
                                                 <a href="{file.protectionToggleUrl}" class="btn btn-default btn-sm"
                                                    title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:action.protect' )}">
-                                                    <core:icon identifier="actions-lock" size="small"/>
+                                                    <core:icon identifier="actions-unlock" size="small"/>
                                                 </a>
                                             </f:else>
                                         </f:if>
                                     </f:then>
                                     <f:else>
                                         <f:if condition="{file.isCleanupProtected}">
-                                            <core:icon identifier="actions-lock" size="small"/>
+                                            <span class="text-warning"
+                                                  title="{f:translate( key:'LLL:EXT:wv_file_cleanup/Resources/Private/Language/locallang_mod_cleanup.xlf:protected.hint' )}">
+                                                <core:icon identifier="actions-lock" size="small"/>
+                                            </span>
                                         </f:if>
                                     </f:else>
                                 </f:if>

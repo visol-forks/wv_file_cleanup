@@ -40,6 +40,10 @@
 				<source>Allow cleanup again</source>
 				<target>Bereinigung wieder erlauben</target>
 			</trans-unit>
+			<trans-unit id="state.protected">
+				<source>Protected</source>
+				<target>Geschützt</target>
+			</trans-unit>
 			<trans-unit id="protected.hint">
 				<source>This file is protected from cleanup and cannot be selected.</source>
 				<target>Diese Datei ist vor der Bereinigung geschützt und kann nicht ausgewählt werden.</target>
